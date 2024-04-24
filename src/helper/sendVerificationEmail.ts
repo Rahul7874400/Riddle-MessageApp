@@ -10,7 +10,7 @@ export async function sendVerificationEmail(
     try {
 
         const { data, error } = await resend.emails.send({
-            from: 'Acme <onboarding@resend.dev>',
+            from: 'onboarding@resend.dev',
             to: email,
             subject: 'Riddle app || Verification code',
             react: VerificationEmail({username , otp : verifyCode}),
