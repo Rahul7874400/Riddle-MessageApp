@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { DB_NAME } from "@/constants";
 
 type connectionObject = {
     isConnected?:number
@@ -14,7 +15,7 @@ async function dbConnect() : Promise<void> {
     }
 
     try {
-        const db = await mongoose.connect(process.env.MONGODB_URL || '' , {})
+        const db = await mongoose.connect(`${process.env.MONGODB_URL}/${DB_NAME}`)
 
         console.log("Database connect successfully at : ",db.connection.host)
 

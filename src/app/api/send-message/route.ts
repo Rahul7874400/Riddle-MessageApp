@@ -46,7 +46,7 @@ export async function POST(request : Request){
         return Response.json(
             {
                 success : true,
-                message : "Message get Succesfully"
+                message : "Message send Succesfully"
             },
             {
                 status : 202
