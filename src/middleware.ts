@@ -4,7 +4,7 @@ import { getToken } from "next-auth/jwt"
 
  
 export const config = {
-  matcher: ['/dashboard/:path*', '/sign-in', '/sign-up', '/', '/verify/:path*'],
+  matcher: ['/dashboard/:path*', '/sign-in', '/sign-up', '/', '/verify/:path*']
 };
 
 // This function can be marked `async` if using `await` inside
@@ -19,10 +19,12 @@ export async function middleware(request: NextRequest) {
         url.pathname.startsWith('/verify') ||
         url.pathname === '/')
     ){
+      console.log("Token exist")
         return NextResponse.redirect(new URL('/dashboard', request.url))
     }
 
-    if(!token && url.pathname.startsWith('/dashboard')){
+    if(!token && url.pathname == '/dashboard'){
+      console.log("Token does not exist")
       return NextResponse.redirect(new URL('/sing-in', request.url));
     }
     return NextResponse.next();

@@ -4,10 +4,6 @@ import { z } from "zod";
 import { usernameValidation } from "@/schemas/singupSchema";
 import { verifySchema } from "@/schemas/verifySchema";
 
-const verifyQuerySchema = {
-    username : usernameValidation,
-    verifyCode : verifySchema
-}
 
 export async function POST(request : Request){
     await dbConnect()

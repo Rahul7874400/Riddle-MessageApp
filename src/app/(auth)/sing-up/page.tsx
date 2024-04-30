@@ -11,7 +11,12 @@ import { useRouter } from "next/navigation"
 import { singupSchema } from "@/schemas/singupSchema"
 import axios , { AxiosError } from 'axios'
 import { ApiResponse } from "@/types/ApiResponse"
-import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage,} from "@/components/ui/form"
+import { Form, 
+    FormField, 
+    FormItem, 
+    FormLabel, 
+    FormControl,  
+    FormMessage,} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
@@ -28,7 +33,6 @@ export default function page(){
 
     const { toast } = useToast()
     const router = useRouter()
-
     const debouncedValue = useDebounceCallback(setUsername , 300)
 
     // zod implementation
@@ -75,7 +79,9 @@ export default function page(){
                 title : 'Success',
                 description : response.data.message
             })
-            router.replace(`/verify/${username}`)
+
+           // router.prefetch(`/verify/${username}`)
+            
         } catch (error) {
             console.error("Error in singup",error)
             const axiosError = error as AxiosError<ApiResponse>
@@ -118,6 +124,16 @@ export default function page(){
                                 />
                               </FormControl>
                               {isCheckingUsername && <Loader2 className="animate-spin" />}
+                              {!isCheckingUsername && usernameMessage && (
+                                <p className={`text-sm ${
+                                            usernameMessage === 'Username is unique'
+                                            ? 'text-green-500'
+                                            : 'text-red-500'
+                                            }`}>
+                                    {usernameMessage}
+                                </p>
+                              )}
+                              
                               <FormMessage />
                             </FormItem>
                           )}
@@ -171,6 +187,14 @@ export default function page(){
                     <Link href="/sing-in" className="text-blue-600 hover:text-blue-800">
                     Sign in
                     </Link>
+               </p>
+              </div>
+
+              <div className="text-center mt-4">
+                <p>
+                    <a href={`/verify/${username}`} className="text-blue-600 hover:text-blue-800">
+                    Please verify your email
+                    </a>
                </p>
               </div>
             </div>
