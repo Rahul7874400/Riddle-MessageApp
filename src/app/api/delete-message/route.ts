@@ -21,14 +21,15 @@ export async function DELETE(request : Request){
         )
     }
 
-    try {
-        const {searchParams} = new URL(request.url)
-        const messageId = {
-            messageid : searchParams.get('messageId')
+    const {searchParams} = new URL(request.url)
+    const queryParams = {
+            messageId : searchParams.get('messageId')
         }
+
+    try {
         const updatedResult = await UserModel.updateOne(
             {_id : user._id},
-            {$pull : {messages : {_id : messageId}}}
+            {$pull : {messages : {_id : queryParams.messageId}}}
             
         )
 

@@ -3,14 +3,14 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcryptjs from "bcryptjs"
 import UserModel from "@/model/User.Model";
 import dbConnect from "@/lib/dbConnect";
-import { promises } from "readline";
+
 
 
 export const authOptions : NextAuthOptions = {
     providers : [
         CredentialsProvider({
             id : "credentials",
-            name : "credentials",
+            name : "Credentials",
             credentials: {
                 email: { label: "email", type: "text" },
                 password: { label: "Password", type: "password" }
@@ -59,7 +59,7 @@ export const authOptions : NextAuthOptions = {
           async jwt({ token, user }) {
             if(user){
                 token._id = user._id?.toString()
-                token.username = user.username?.toString()
+                token.username = user.username
                 token.isVerified = user.isVerified
                 token.isAcceptingMessage = user.isAcceptingMessage
             }

@@ -21,10 +21,10 @@ import { Input } from "@/components/ui/input"
 
 
 export default function page(){
-  const {push} = useRouter()
+  const router= useRouter()
   const {toast} = useToast()
 
-  const form  = useForm({
+  const form  = useForm<z.infer<typeof singinSchema>>({
     resolver : zodResolver(singinSchema),
     defaultValues : {
       identifier : '',
@@ -32,7 +32,7 @@ export default function page(){
     }
   })
 
-  const onSubmit = async (data :any)=>{
+  const onSubmit = async (data : z.infer<typeof singinSchema>)=>{
     console.log("Email :",data.identifier)
     const result = await signIn(
       'credentials',
@@ -55,7 +55,7 @@ export default function page(){
 
     if(result?.url){
       console.log("Login succesfully")
-      push('/dashboard')
+      router.replace('/dashboard')
     }
   }
 
