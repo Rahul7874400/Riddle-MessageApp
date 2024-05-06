@@ -29,7 +29,7 @@ export default function(){
         resolver : zodResolver(verifySchema),
     })
 
-    const onSubmit = async (data : any)=>{
+    const onSubmit = async (data :any)=>{
       // console.log("username :",params.username)
       // console.log("code",data.code)
         try {
