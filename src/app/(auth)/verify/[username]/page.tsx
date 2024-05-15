@@ -43,7 +43,7 @@ export default function(){
                 description : response.data.message
             })
 
-            router.replace(`/sing-in`)
+            
         } catch (error) {
             console.log("Error in verify code",error)
             const axiosError = error as AxiosError<ApiResponse>
@@ -53,6 +53,8 @@ export default function(){
                 description : errorMessage,
                 variant : "destructive"
             })
+        } finally{
+          router.push(`/sing-in`)
         }
     }
     return (

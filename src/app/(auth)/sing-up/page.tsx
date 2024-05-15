@@ -80,7 +80,7 @@ export default function page(){
                 description : response.data.message
             })
 
-           // router.prefetch(`/verify/${username}`)
+           router.push(`/verify/${username}`)
             
         } catch (error) {
             console.error("Error in singup",error)
@@ -93,6 +93,7 @@ export default function page(){
             }) 
         }finally{
             setIsSubmitting(false)
+            form.reset({ ...form.getValues(), username: '',email : '',password : '' });
         }
     }
 

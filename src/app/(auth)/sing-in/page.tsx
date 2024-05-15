@@ -103,6 +103,14 @@ export default function page(){
         <Button type="submit">Submit</Button>
       </form>
     </Form>
+
+    <div className="text-center mt-4">
+                <p>
+                    <a href='/sing-up' className="text-blue-600 hover:text-blue-800">
+                      Create Account
+                    </a>
+               </p>
+              </div>
     </div>
 </div>
   )

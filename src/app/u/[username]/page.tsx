@@ -10,6 +10,7 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import * as z from 'zod'
 import { Textarea } from "@/components/ui/textarea"
+import { useCompletion } from "ai/react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -21,11 +22,28 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+  } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
+import  Link  from "next/link"
+import { Separator } from "@radix-ui/react-separator"
 
+const initialString = "What's your favorite movie?||Do you have any pets?||What's your dream job?";
+const specialChar = "||"
 
+const parseMessageString = (messageString : string):string[] =>{
+    return messageString.split(specialChar)
+}
 export default function (){
     const[isLoading , setIsLoading] = useState(false)
+    //const [isSuggestLoading , setIssuggestLoading] = useState(false)
     const params = useParams<{username : string}>()
     const {toast} = useToast()
 
@@ -34,11 +52,28 @@ export default function (){
     })
 
     const {watch , setValue ,} = form
-    const message = watch('sendMessage')
+    const message = watch('content')
+
+
+
+    const handleMessage = (message :string )=>{
+        setValue('content',message)
+    }
+
+    const {
+        complete,
+        completion,
+        isLoading : isSuggestLoading,
+        error,
+        handleSubmit
+    } = useCompletion({
+        api : '/api/suggest-messages',
+        initialCompletion : initialString
+    })
     const onSubmit = async (data : any) =>{
         setIsLoading(true)
 
-        console.log("data",data)
+        //console.log("data",data)
         try {
 
             const response = await axios.post<ApiResponse>('/api/send-message',{
@@ -63,6 +98,19 @@ export default function (){
             })
         } finally{
             setIsLoading(false)
+        }
+    }
+
+    const fetchSuggestMessage = async ()=>{
+        console.log("Inside the fetch suggested message")
+        try {
+            complete('')
+        } catch (error) {
+            const axiosError = error as AxiosError<ApiResponse>
+            toast({
+                title : "Error",
+                description : axiosError.response?.data.message
+            })
         }
     }
 
@@ -109,6 +157,54 @@ export default function (){
                     </div>
                 </form>
             </Form>
+
+            <div className="space-y-8 my-8">
+                <div className="space-y-2">
+                    <Button 
+                    onClick={fetchSuggestMessage}
+                    disabled = {isSuggestLoading}
+                    className="my-2"
+                    >
+                        Suggest Message
+                    </Button>
+                    <p>Click any message below it to suggest it</p>
+                </div>
+
+                <Card>
+                <CardHeader>
+                <h3 className="text-xl font-semibold">Messages</h3>
+                </CardHeader>
+                <CardContent className="flex flex-col space-y-4">
+                    {error ? (
+                        <p className="text-red-500">{error.message}</p>
+                    ) : (
+                        parseMessageString(completion).map( (message,index)=>(
+                            <Button
+                            key={index}
+                            onClick={ ()=>handleMessage(message) }
+                            className="mb-2"
+                            variant="outline"
+                            >
+                                {message}
+                            </Button>
+                        ) )
+                    )}
+                </CardContent>
+                </Card>
+            </div>
+            <Separator className="my-6"/>
+
+            <div className="text-center">
+                <div className="mb-4">Get Your Message</div>
+
+                <Link href='/sing-up'>
+                    <Button>
+                        Create Account
+
+                    </Button>
+                </Link>
+
+            </div>
         </div>
     )
 }
